@@ -1,8 +1,9 @@
 let zip_exn l1 l2 f =
   let rec zip_exn' l1 l2 f pos len res =
     if pos = len then res
-    else let x = f (List.nth l1 pos) (List.nth l2 pos) in
-         zip_exn' l1 l2 f (pos + 1) len (x :: res)
+    else
+      let x = f (List.nth l1 pos) (List.nth l2 pos) in
+      zip_exn' l1 l2 f (pos + 1) len (x :: res)
   in
   zip_exn' l1 l2 f 0 (List.length l1) []
 
@@ -32,7 +33,9 @@ let print_headers headers widths =
 let rec print_rows rows widths =
   match rows with
   | [] -> ()
-  | hd :: tl -> let _ = print_row hd widths in print_rows tl widths
+  | hd :: tl ->
+      let _ = print_row hd widths in
+      print_rows tl widths
 
 let print_table headers rows =
   let ws = widths headers rows in
@@ -40,16 +43,14 @@ let print_table headers rows =
   print_rows rows ws
 
 let test_data =
-  ["Id"; "Name"; "Age"],
-  [
-    ["1"; "Robin"; "70"];
-    ["2"; "Xavier"; "50"];
-    ["3"; "Yaron"; "40"];
-    ["4"; "Anil"; "40"];
-  ]
+  ( [ "Id"; "Name"; "Age" ],
+    [
+      [ "1"; "Robin"; "70" ];
+      [ "2"; "Xavier"; "50" ];
+      [ "3"; "Yaron"; "40" ];
+      [ "4"; "Anil"; "40" ];
+    ] )
 
 let () =
   let headers, rows = test_data in
   print_table headers rows
-
-
