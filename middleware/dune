@@ -1,0 +1,3 @@
+(executable
+ (name middleware)
+ (libraries cohttp-lwt-unix conduit-lwt))
