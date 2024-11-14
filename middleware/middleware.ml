@@ -2,7 +2,9 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
-let server =
+let router _meth _uri = failwith "TODO"
+
+let serve port =
   let callback _conn req body =
     let uri = req |> Request.uri |> Uri.to_string in
     let meth = req |> Request.meth |> Code.string_of_method in
@@ -12,6 +14,6 @@ let server =
         headers body )
     >>= fun body -> Server.respond_string ~status:`OK ~body ()
   in
-  Server.create ~mode:(`TCP (`Port 8000)) (Server.make ~callback ())
+  Server.create ~mode:(`TCP (`Port port)) (Server.make ~callback ())
 
-let () = ignore (Lwt_main.run server)
+let () = ignore (Lwt_main.run @@ serve 3000)
