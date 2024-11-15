@@ -1,0 +1,3 @@
+(library
+ (name lwt_mirage)
+ (libraries lwt lwt.unix logs logs.lwt))
