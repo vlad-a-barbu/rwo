@@ -2,8 +2,6 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
-let router _meth _uri = failwith "TODO"
-
 let serve port =
   let callback _conn req body =
     let uri = req |> Request.uri |> Uri.to_string in

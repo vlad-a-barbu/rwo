@@ -1,0 +1,3 @@
+(executable
+(name lwt_lab)
+(libraries lwt lwt.unix logs logs.lwt))

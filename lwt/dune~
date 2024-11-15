@@ -1,0 +1,3 @@
+(library
+(name lwt_lab)
+(libraries lwt))
