@@ -1,24 +1,26 @@
-(* ref - https://adisrini.com/lightweight-dependent-in-ocaml/ *)
-
-module N = struct
-  type zero = Zero
-  type 'n succ = Succ of 'n
-  type 'n t = Z : zero t | S : 'n t -> 'n succ t
-end
+type zero = Zero
+type 'a succ = Succ
 
 module LT = struct
-  type ('x, 'y) t =
-    (* For any x, 0 is less than succ(x) *)
-    | Zero : 'x N.t -> (N.zero N.t, 'x N.succ N.t) t
-    (* For any x, x is less than succ(x) *)
-    | Succ : 'x N.t -> ('x N.t, 'x N.succ N.t) t
-    (* For any x and y, if x < y and y < z, then x < z *)
-    | Trans : ('x N.t, 'y N.t) t * ('y N.t, 'z N.t) t -> ('x N.t, 'z N.t) t
+  type ('a, 'b) t =
+    | Zero : (zero, 'nat succ) t (* 0 < 1 + x *)
+    | Succ : ('x, 'y) t -> ('x succ, 'y succ) t
+  (* if x < y then x + 1 < y + 1 *)
 end
 
 module BList = struct
   type ('a, 'len) t =
-    | []     : ('a, N.zero N.t) t
-    | ( :: ) : 'a * ('a, 'len N.t) t -> ('a, 'len N.succ N.t) t
+    | [] : ('a, zero) t
+    | ( :: ) : 'a * ('a, 'len) t -> ('a, 'len succ) t
+
+  let rec nth : type idx_t len_t. ('a, len_t) t -> (idx_t, len_t) LT.t -> 'a =
+   fun list idx ->
+    match (list, idx) with
+    | hd :: _, LT.Zero -> hd
+    | _ :: tl, LT.Succ idx -> nth tl idx
+    | _ -> .
 end
 
+(* let () = BList.(nth [ 1 ] (LT.Succ(LT.Zero))) |> string_of_int |> print_endline *)
+let () = BList.(nth [ 1 ; 2 ] (LT.Succ(LT.Zero))) |> string_of_int |> print_endline
+         
