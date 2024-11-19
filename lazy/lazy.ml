@@ -38,10 +38,22 @@ let rec memo_zip ht f (Cons (x1, seq1)) (Cons (x2, seq2)) =
   Cons (f x1 x2, fun () -> memo_zip ht f s1 s2)
 
 let memo_fib ht =
+  let open Z in
   let rec go (Cons (x1, seq1)) (Cons (x2, seq2)) =
     let s1 = memo ht x1 seq1 and s2 = memo ht x2 seq2 in
     let next = memo_zip ht ( + ) s1 s2 in
     Cons (x2, fun () -> go s2 next)
   in
-  go (const_seq 0) (const_seq 1)
+  go (const_seq ~$0) (const_seq ~$1)
 
+let rec apply f n seq =
+  match (n, seq) with
+  | 0, _ -> ()
+  | _, Cons (hd, tl) ->
+      f hd;
+      apply f (n - 1) (tl ())
+
+let () =
+  let ht = Hashtbl.create 100 in
+  let print z = z |> Z.to_string |> print_endline in
+  apply print 333 @@ memo_fib ht
