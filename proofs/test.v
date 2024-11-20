@@ -1,3 +1,5 @@
+(* ref - https://clarksmr.github.io/sf-lectures/textbook/lf/Basics.html *)
+
 Inductive day : Type :=
 | monday
 | tuesday
