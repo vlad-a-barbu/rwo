@@ -1,14 +1,18 @@
 module Point = struct
-  type t = { x : float; y : float }
+  type t =
+    { x : float
+    ; y : float
+    }
 
-  let xy p = (p.x, p.y)
+  let xy p = p.x, p.y
 end
 
-let f1 points = points |> List.map (fun p -> (p.Point.x, p.Point.y))
+let f1 points = points |> List.map (fun p -> p.Point.x, p.Point.y)
 
 let f2 points =
   let open Point in
-  points |> List.map (fun p -> (p.x, p.y))
+  points |> List.map (fun p -> p.x, p.y)
+;;
 
 let f3 (points : Point.t list) = points |> List.map Point.xy
 
@@ -52,7 +56,10 @@ end
 let sum l = List.fold_left (fun sum x -> sum + Pref.get x) 0 l
 let double_list l = List.iter (fun x -> Pref.set x (2 * Pref.get x)) l
 
-type u = { a : ro Pref.t list; b : rw Pref.t list }
+type u =
+  { a : ro Pref.t list
+  ; b : rw Pref.t list
+  }
 
 let build_u =
   let a = List.map Pref.create [ 1; 2; 3 ] in
@@ -60,3 +67,4 @@ let build_u =
   (* double_list a; *)
   double_list b;
   { a; b }
+;;

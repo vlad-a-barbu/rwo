@@ -14,13 +14,13 @@ module BList = struct
     | ( :: ) : 'a * ('a, 'len) t -> ('a, 'len succ) t
 
   let rec nth : type idx_t len_t. ('a, len_t) t -> (idx_t, len_t) LT.t -> 'a =
-   fun list idx ->
-    match (list, idx) with
+    fun list idx ->
+    match list, idx with
     | hd :: _, LT.Zero -> hd
     | _ :: tl, LT.Succ idx -> nth tl idx
     | _ -> .
+  ;;
 end
 
 (* let () = BList.(nth [ 1 ] (LT.Succ(LT.Zero))) |> string_of_int |> print_endline *)
-let () = BList.(nth [ 1 ; 2 ] (LT.Succ(LT.Zero))) |> string_of_int |> print_endline
-         
+let () = BList.(nth [ 1; 2 ] (LT.Succ LT.Zero)) |> string_of_int |> print_endline

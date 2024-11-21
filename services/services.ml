@@ -1,17 +1,27 @@
-type protocol = TCP | UDP
+type protocol =
+  | TCP
+  | UDP
 
 let proto_of_string = function
   | "tcp" -> TCP
   | "udp" -> UDP
   | str -> failwith @@ Printf.sprintf "invalid proto: %s" str
+;;
 
-let string_of_proto = function TCP -> "tcp" | UDP -> "udp"
+let string_of_proto = function
+  | TCP -> "tcp"
+  | UDP -> "udp"
+;;
 
-type service = { name : string; port : int; proto : protocol }
+type service =
+  { name : string
+  ; port : int
+  ; proto : protocol
+  }
 
 let string_of_service service =
-  Printf.sprintf "%s %d/%s" service.name service.port
-    (string_of_proto service.proto)
+  Printf.sprintf "%s %d/%s" service.name service.port (string_of_proto service.proto)
+;;
 
 let service_re = Re.Posix.compile_pat "([a-zA-Z]+)[ \t]+([0-9]+)/([a-zA-Z]+)"
 
@@ -19,18 +29,24 @@ let parse_service line =
   try
     let matches = Re.exec service_re line in
     Some
-      {
-        name = Re.Group.get matches 1;
-        port = int_of_string @@ Re.Group.get matches 2;
-        proto = proto_of_string @@ Re.Group.get matches 3;
+      { name = Re.Group.get matches 1
+      ; port = int_of_string @@ Re.Group.get matches 2
+      ; proto = proto_of_string @@ Re.Group.get matches 3
       }
-  with _ -> None
+  with
+  | _ -> None
+;;
 
 let () =
   match Io.read_file_lines "/etc/services" with
   | Ok lines ->
-      List.map parse_service lines
-      |> List.filter (function Some _ -> true | None -> false)
-      |> List.map (function Some x -> x | None -> assert false)
-      |> List.iter (fun service -> print_endline @@ string_of_service service)
+    List.map parse_service lines
+    |> List.filter (function
+      | Some _ -> true
+      | None -> false)
+    |> List.map (function
+      | Some x -> x
+      | None -> assert false)
+    |> List.iter (fun service -> print_endline @@ string_of_service service)
   | Error err -> raise err
+;;

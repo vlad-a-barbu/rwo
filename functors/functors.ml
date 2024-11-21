@@ -10,10 +10,12 @@ module Twice (M : AddMult) : AddMult = struct
   let add y =
     M.add y;
     M.add y
+  ;;
 
   let mult y =
     M.mult y;
     M.mult y
+  ;;
 end
 
 module Clone =
@@ -43,3 +45,4 @@ let () =
   M3.add 1;
   M3.mult 3;
   print_endline @@ Printf.sprintf "M1: %d; M2: %d; M3: %d;" !M1.x !M2.x !M3.x
+;;

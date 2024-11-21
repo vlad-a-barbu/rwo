@@ -12,7 +12,8 @@ let rec eval expr =
   | Or (x, y) -> eval x || eval y
   | Xor (x, y) -> eval x <> eval y
   | Not x -> not (eval x)
+;;
 
 let%test "test" =
-  eval (And (Or (Base true, Base false), Not (And (Base true, Base false))))
-  = true
+  eval (And (Or (Base true, Base false), Not (And (Base true, Base false)))) = true
+;;
