@@ -14,14 +14,14 @@ type _ expr =
   | If : bool expr * 'a expr * 'a expr -> 'a expr
   | Plus : int expr * int expr -> int expr
 
-let rec eval_expr : 'a. 'a expr -> 'a =
-  fun (type a) (expr : a expr) : a ->
-  match expr with
-  | Value x -> eval_value x
-  | Eq (x, y) -> eval_expr x = eval_expr y
-  | If (c, t, f) -> if eval_expr c then eval_expr t else eval_expr f
-  | Plus (x, y) -> eval_expr x + eval_expr y
-;;
+(* let rec eval_expr : 'a. 'a expr -> 'a = *)
+(*   fun (type a) (expr : a expr) : a -> *)
+(*   match expr with *)
+(*   | Value x -> eval_value x *)
+(*   | Eq (x, y) -> eval_expr x = eval_expr y *)
+(*   | If (c, t, f) -> if eval_expr c then eval_expr t else eval_expr f *)
+(*   | Plus (x, y) -> eval_expr x + eval_expr y *)
+(* ;; *)
 
 (* shorthand *)
 let rec eval_expr : type a. a expr -> a = function
@@ -42,4 +42,22 @@ let () =
   let b x = Value (Bool x) in
   let res = eval_expr @@ If (b true, i 1, i 2) in
   res |> string_of_int |> print_endline
+;;
+
+type stringable =
+  | Stringable :
+      { value : 'a
+      ; to_string : 'a -> string
+      }
+      -> stringable
+
+let stringables =
+  let s value to_string = Stringable { value; to_string } in
+  [ s 123 string_of_int; s 1.23 string_of_float; s "123" Fun.id ]
+;;
+
+let () =
+  List.iter
+    (fun (Stringable { value; to_string }) -> to_string value |> print_endline)
+    stringables
 ;;
