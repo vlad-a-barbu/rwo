@@ -1,2 +1,3 @@
-(library
- (name effects))
+(executable
+ (name effects)
+ (libraries re))
