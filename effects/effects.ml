@@ -52,9 +52,8 @@ type _ Effect.t += Cmd : cmd -> string Effect.t
 exception InvalidCmd of string
 
 let single_arg_cmd_re cmd =
-  let pat = Printf.sprintf "[ \\t]*%s[ \\t]+([a-zA-Z0-9\\/\\.]+)[ \\t]*" cmd in
-  (* print_endline pat; *)
-  Re.Posix.compile_pat pat
+  Re.Posix.compile_pat
+  @@ Printf.sprintf "[ \\t]*%s([ \\t]+([a-zA-Z0-9/\\.]+)[ \\t]*)?" cmd
 ;;
 
 let cmds = [ "cd", single_arg_cmd_re "cd"; "ls", single_arg_cmd_re "ls" ]
@@ -62,9 +61,9 @@ let cmds = [ "cd", single_arg_cmd_re "cd"; "ls", single_arg_cmd_re "ls" ]
 let eval_cmd cmd =
   let eval (c, re) =
     try
-      let matches = Re.exec re cmd in
-      let arg = Re.Group.get matches 1 in
-      Some (c, arg)
+      let arr = Re.Group.all @@ Re.exec re cmd in
+      let arg = arr.(Array.length arr - 1) in
+      Some (c, if arg = "" then "." else arg)
     with
     | _ -> None
   in
