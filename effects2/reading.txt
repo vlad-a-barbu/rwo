@@ -1,0 +1,4 @@
+https://github.com/matijapretnar/eff/
+https://www.eff-lang.org/try/
+https://www.eff-lang.org/handlers-tutorial.pdf
+https://github.com/yallop/effects-bibliography
